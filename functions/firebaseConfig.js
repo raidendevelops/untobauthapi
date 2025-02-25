@@ -1,4 +1,5 @@
 const express = require('express');
+const serverless = require('serverless-http'); // Add this line
 const app = express();
 
 app.use((req, res, next) => {
@@ -19,4 +20,4 @@ app.get('/firebase-config', (req, res) => {
     });
 });
 
-module.exports = app;
+module.exports.handler = serverless(app); // Export the handler
