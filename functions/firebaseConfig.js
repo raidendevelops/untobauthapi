@@ -1,6 +1,12 @@
 const express = require('express');
 const app = express();
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // Allow all origins for simplicity
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
+
 app.get('/firebase-config', (req, res) => {
     res.json({
         apiKey: "AIzaSyCOOOzdBKLfQpToFW6bt5XW-tgbOsb7-_s",
