@@ -16,28 +16,42 @@ const writeData = (data) => {
 };
 
 exports.handler = async (event) => {
-  switch (event.httpMethod) {
-    case 'POST':
-      return handlePostRequest(event);
-    case 'GET':
-      return handleGetRequest();
-    default:
-      return { statusCode: 405, body: 'Method Not Allowed' };
+  try {
+    switch (event.httpMethod) {
+      case 'POST':
+        return handlePostRequest(event);
+      case 'GET':
+        return handleGetRequest();
+      default:
+        return { statusCode: 405, body: 'Method Not Allowed' };
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    return { statusCode: 500, body: 'Internal Server Error' };
   }
 };
 
 const handlePostRequest = async (event) => {
   const data = readData();
   const body = JSON.parse(event.body);
+  
+  // Generate a unique ID for the new app
+  const newAppId = Date.now().toString();
   const newApp = {
-    applicationId: Date.now().toString(),
+    applicationId: newAppId,
     email: body.email,
     url: body.url || '',
     blocked: body.blocked || false,
     approved: body.approved || false,
   };
+
   data.push(newApp);
   writeData(data);
+  
+  // Debugging logs
+  console.log('New app created:', newApp);
+  console.log('Data:', data);
+  
   return { statusCode: 201, body: JSON.stringify(newApp) };
 };
 
