@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Management</title>
+  <script>
+    async function createNewApp() {
+      const email = prompt("Enter email:");
+      if (email) {
+        const response = await fetch('/api/appManagement', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email }),
+        });
+        const data = await response.json();
+        alert(`Created app with ID: ${data.applicationId}`);
+      }
+    }
+
+    async function getAllApps() {
+      const response = await fetch('/api/appManagement', {
+        method: 'GET',
+      });
+      const data = await response.json();
+      alert(`All apps: ${JSON.stringify(data, null, 2)}`);
+    }
+  </script>
+</head>
+<body>
+  <button onclick="createNewApp()">Create New App</button>
+  <button onclick="getAllApps()">Show All Apps</button>
+</body>
+</html>
