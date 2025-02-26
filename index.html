@@ -23,12 +23,67 @@
         method: 'GET',
       });
       const data = await response.json();
-      alert(`All apps: ${JSON.stringify(data, null, 2)}`);
+      displayApps(data);
+    }
+
+    async function approveApp(applicationId) {
+      const response = await fetch('https://raidenauth.netlify.app/api/appManagement', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ applicationId, approved: true }),
+      });
+      const data = await response.json();
+      alert(`App ${data.applicationId} approved`);
+      getAllApps();
+    }
+
+    async function declineApp(applicationId) {
+      const response = await fetch('https://raidenauth.netlify.app/api/appManagement', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ applicationId, approved: false }),
+      });
+      const data = await response.json();
+      alert(`App ${data.applicationId} declined`);
+      getAllApps();
+    }
+
+    function displayApps(apps) {
+      const appContainer = document.getElementById('app-container');
+      appContainer.innerHTML = '';
+      apps.forEach(app => {
+        const appElement = document.createElement('div');
+        appElement.innerHTML = `
+          <div>
+            <p>Email: ${app.email}</p>
+            <p>URL: ${app.url}</p>
+            <p>Blocked: ${app.blocked}</p>
+            <p>Approved: ${app.approved}</p>
+            <button onclick="approveApp('${app.applicationId}')">Approve</button>
+            <button onclick="declineApp('${app.applicationId}')">Decline</button>
+          </div>
+        `;
+        appContainer.appendChild(appElement);
+      });
+    }
+
+    function adminLogin() {
+      const password = prompt("Enter admin password:");
+      if (password === 'test') {
+        document.getElementById('admin-section').style.display = 'block';
+        getAllApps();
+      } else {
+        alert('Incorrect password');
+      }
     }
   </script>
 </head>
 <body>
   <button onclick="createNewApp()">Create New App</button>
-  <button onclick="getAllApps()">Show All Apps</button>
+  <button onclick="adminLogin()">Admin Login</button>
+  <div id="admin-section" style="display:none;">
+    <h2>Admin Section</h2>
+    <div id="app-container"></div>
+  </div>
 </body>
 </html>
