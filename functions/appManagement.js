@@ -109,11 +109,19 @@ const handlePostRequest = async (event) => {
     uploadFile(auth, 'apps.json', filePath);
   });
 
-  return { statusCode: 201, body: JSON.stringify(newApp) };
+  // Debugging logs
+  console.log('New app created:', newApp);
+  console.log('Data after adding new app:', apps);
+
+  // Return the new app with applicationId
+  return {
+    statusCode: 201,
+    body: JSON.stringify({ applicationId: newAppId, ...newApp })
+  };
 };
 
 const handleGetRequest = async () => {
-  console.log('Data fetched:', apps);
+  console.log('Data fetched:', apps); // Debugging log
   return { statusCode: 200, body: JSON.stringify(apps) };
 };
 
