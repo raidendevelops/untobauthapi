@@ -8,7 +8,7 @@
     async function createNewApp() {
       const email = prompt("Enter email:");
       if (email) {
-        const response = await fetch('/api/appManagement', {
+        const response = await fetch('https://raidenauth.netlify.app/api/appManagement', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: email }),
@@ -19,7 +19,7 @@
     }
 
     async function getAllApps() {
-      const response = await fetch('/api/appManagement', {
+      const response = await fetch('https://raidenauth.netlify.app/api/appManagement', {
         method: 'GET',
       });
       const data = await response.json();
