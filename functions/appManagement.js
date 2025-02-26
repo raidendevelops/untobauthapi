@@ -34,7 +34,7 @@ exports.handler = async (event) => {
 const handlePostRequest = async (event) => {
   const data = readData();
   const body = JSON.parse(event.body);
-  
+
   // Generate a unique ID for the new app
   const newAppId = Date.now().toString();
   const newApp = {
@@ -47,15 +47,16 @@ const handlePostRequest = async (event) => {
 
   data.push(newApp);
   writeData(data);
-  
+
   // Debugging logs
   console.log('New app created:', newApp);
-  console.log('Data:', data);
-  
+  console.log('Data after adding new app:', data);
+
   return { statusCode: 201, body: JSON.stringify(newApp) };
 };
 
 const handleGetRequest = async () => {
   const data = readData();
+  console.log('Data fetched:', data); // Debugging log
   return { statusCode: 200, body: JSON.stringify(data) };
 };
