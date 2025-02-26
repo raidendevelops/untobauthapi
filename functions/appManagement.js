@@ -1,24 +1,4 @@
-const fs = require('fs');
-const path = require('path');
-
-const dataFilePath = path.join(__dirname, '..', 'apps.json');
-
-// Helper function to read data from JSON file
-const readData = () => {
-  if (!fs.existsSync(dataFilePath)) {
-    console.log('Data file not found, returning empty array');
-    return [];
-  }
-  const data = fs.readFileSync(dataFilePath);
-  console.log('Data read from file:', data.toString());
-  return JSON.parse(data);
-};
-
-// Helper function to write data to JSON file
-const writeData = (data) => {
-  fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-  console.log('Data written to file:', JSON.stringify(data, null, 2));
-};
+let apps = [];
 
 exports.handler = async (event) => {
   try {
@@ -27,6 +7,8 @@ exports.handler = async (event) => {
         return handlePostRequest(event);
       case 'GET':
         return handleGetRequest();
+      case 'PUT':
+        return handlePutRequest(event);
       default:
         return { statusCode: 405, body: 'Method Not Allowed' };
     }
@@ -37,7 +19,6 @@ exports.handler = async (event) => {
 };
 
 const handlePostRequest = async (event) => {
-  const data = readData();
   const body = JSON.parse(event.body);
 
   // Generate a unique ID for the new app
@@ -50,18 +31,29 @@ const handlePostRequest = async (event) => {
     approved: body.approved || false,
   };
 
-  data.push(newApp);
-  writeData(data);
+  apps.push(newApp);
 
   // Debugging logs
   console.log('New app created:', newApp);
-  console.log('Data after adding new app:', data);
+  console.log('Data after adding new app:', apps);
 
   return { statusCode: 201, body: JSON.stringify(newApp) };
 };
 
 const handleGetRequest = async () => {
-  const data = readData();
-  console.log('Data fetched:', data); // Debugging log
-  return { statusCode: 200, body: JSON.stringify(data) };
+  console.log('Data fetched:', apps); // Debugging log
+  return { statusCode: 200, body: JSON.stringify(apps) };
+};
+
+const handlePutRequest = async (event) => {
+  const body = JSON.parse(event.body);
+  const applicationId = body.applicationId;
+  const appIndex = apps.findIndex(app => app.applicationId === applicationId);
+
+  if (appIndex !== -1) {
+    apps[appIndex].approved = body.approved;
+    return { statusCode: 200, body: JSON.stringify(apps[appIndex]) };
+  }
+
+  return { statusCode: 404, body: 'App not found' };
 };
