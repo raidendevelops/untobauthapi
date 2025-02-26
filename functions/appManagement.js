@@ -1,18 +1,23 @@
 const fs = require('fs');
 const path = require('path');
 
-const dataFilePath = path.join(__dirname, 'apps.json');
+const dataFilePath = path.join(__dirname, '..', 'apps.json');
 
 // Helper function to read data from JSON file
 const readData = () => {
-  if (!fs.existsSync(dataFilePath)) return [];
+  if (!fs.existsSync(dataFilePath)) {
+    console.log('Data file not found, returning empty array');
+    return [];
+  }
   const data = fs.readFileSync(dataFilePath);
+  console.log('Data read from file:', data.toString());
   return JSON.parse(data);
 };
 
 // Helper function to write data to JSON file
 const writeData = (data) => {
   fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+  console.log('Data written to file:', JSON.stringify(data, null, 2));
 };
 
 exports.handler = async (event) => {
