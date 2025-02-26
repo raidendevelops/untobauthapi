@@ -5,19 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>App Management</title>
   <script>
+
     async function createNewApp() {
-      const email = prompt("Enter email:");
-      const url = prompt("Enter URL (optional):");
-      if (email) {
-        const response = await fetch('https://raidenauth.netlify.app/api/appManagement', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email, url: url }),
-        });
-        const data = await response.json();
-        alert(`Created app with ID: ${data.applicationId}`);
-      }
-    }
+  const email = prompt("Enter email:");
+  const url = prompt("Enter URL (optional):");
+  if (email) {
+    const response = await fetch('https://raidenauth.netlify.app/api/appManagement', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, url: url }),
+    });
+    const data = await response.json();
+    alert(`Created app with ID: ${data.applicationId}`);
+  }
+}
+
 
     async function getAllApps() {
       const response = await fetch('https://raidenauth.netlify.app/api/appManagement', {
