@@ -21,7 +21,6 @@ exports.handler = async (event) => {
 const handlePostRequest = async (event) => {
   const body = JSON.parse(event.body);
 
-  // Generate a unique ID for the new app
   const newAppId = Date.now().toString();
   const newApp = {
     applicationId: newAppId,
@@ -32,8 +31,6 @@ const handlePostRequest = async (event) => {
   };
 
   apps.push(newApp);
-
-  // Debugging logs
   console.log('New app created:', newApp);
   console.log('Data after adding new app:', apps);
 
@@ -41,7 +38,7 @@ const handlePostRequest = async (event) => {
 };
 
 const handleGetRequest = async () => {
-  console.log('Data fetched:', apps); // Debugging log
+  console.log('Data fetched:', apps);
   return { statusCode: 200, body: JSON.stringify(apps) };
 };
 
@@ -51,7 +48,12 @@ const handlePutRequest = async (event) => {
   const appIndex = apps.findIndex(app => app.applicationId === applicationId);
 
   if (appIndex !== -1) {
-    apps[appIndex].approved = body.approved;
+    if (body.hasOwnProperty('approved')) {
+      apps[appIndex].approved = body.approved;
+    }
+    if (body.hasOwnProperty('blocked')) {
+      apps[appIndex].blocked = body.blocked;
+    }
     return { statusCode: 200, body: JSON.stringify(apps[appIndex]) };
   }
 
